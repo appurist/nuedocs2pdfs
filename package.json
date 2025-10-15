@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node generate-docs-pdfs",
+    "start": "bun generate-docs-pdfs.js",
     "clean": "rmdir /s /q pdfs 2>nul || exit 0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

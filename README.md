@@ -3,6 +3,6 @@ A simple node.js script to extract organized folder tree of PDFs from https://nu
 
 ## Usage
 
-- Run `npm install` or `pnpm install` or whatever package manager you use.
-- Run `npm start` or `pnpm start` or just run `node generate-docs-pdfs` to create the output documents.
+- Run `bun install` to install dependencies.
+- Run `bun start` or `bun generate-docs-pdfs.js` to create the output documents.
 - Check the resulting new `pdfs` subfolder tree.
