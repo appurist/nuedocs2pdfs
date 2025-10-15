@@ -72,13 +72,58 @@ async function generatePDFs() {
     
     console.log('\nFound sections:', Object.keys(sections).join(', '));
     
+    // Define section order and numbering
+    const sectionOrder = [
+      'Essentials',
+      'Tools', 
+      'Developing',
+      'Concepts'
+    ];
+    
+    // Create ordered sections list
+    const orderedSections = [];
+    
+    // Add numbered sections in order
+    sectionOrder.forEach((sectionName, index) => {
+      if (sections[sectionName]) {
+        orderedSections.push({
+          name: sectionName,
+          pages: sections[sectionName],
+          number: index + 1
+        });
+      }
+    });
+    
+    // Add any other sections (except Reference) after the numbered ones
+    Object.keys(sections).forEach(sectionName => {
+      if (!sectionOrder.includes(sectionName) && sectionName !== 'Reference') {
+        orderedSections.push({
+          name: sectionName,
+          pages: sections[sectionName],
+          number: orderedSections.length + 1
+        });
+      }
+    });
+    
+    // Add Reference last (without number for now, or with last number)
+    if (sections['Reference']) {
+      orderedSections.push({
+        name: 'Reference',
+        pages: sections['Reference'],
+        number: orderedSections.length + 1
+      });
+    }
+    
+    console.log('\nProcessing sections in order:', orderedSections.map(s => `${s.number}. ${s.name}`).join(', '));
+    
     // Ensure pdfs directory exists
     await fs.mkdir('pdfs', { recursive: true });
     
     const browser = await puppeteer.launch({ headless: 'new' });
     
     try {
-      for (const [section, pages] of Object.entries(sections)) {
+      for (const sectionInfo of orderedSections) {
+        const { name: section, pages, number } = sectionInfo;
         console.log(`\nProcessing ${section} section...`);
         
         const allPagesHTML = [];
@@ -153,12 +198,13 @@ async function generatePDFs() {
           // Set the combined content
           await combinedPage.setContent(combinedHTML, { waitUntil: 'networkidle0' });
           
-          // Generate a valid filename for the section
+          // Generate a valid filename for the section with number
           const sanitizedSection = section
             .replace(/[^a-zA-Z0-9]/g, '-')
             .replace(/-+/g, '-')
             .replace(/^-|-$/g, '');
-          const filename = `${sanitizedSection}.pdf`;
+          const paddedNumber = number.toString().padStart(2, '0');
+          const filename = `${paddedNumber}-${sanitizedSection}.pdf`;
           const filepath = path.join('pdfs', filename);
           
           // Generate the combined PDF
