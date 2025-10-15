@@ -9,7 +9,7 @@
     "build:pages": "bun build --compile ./generate-pages-pdfs.js --outfile gen-pages",
     "build:sections": "bun build --compile ./generate-sections-pdfs.js --outfile gen-sections",
     "build:html": "bun generate-book.js",
-    "build:epub": "pandoc html/00-toc.html html/chapter-*.html -o nuejs-docs.epub --epub-metadata=metadata.xml --css=epub-styles.css --epub-cover-image=cover.png",
+    "build:epub": "pandoc html/00-toc.html html/chapter-01-essentials.html html/chapter-02-tools.html html/chapter-03-developing.html html/chapter-04-concepts.html html/chapter-05-reference.html -o nuejs-docs.epub --epub-metadata=metadata.xml --css=epub-styles.css --epub-cover-image=cover.png --toc-depth=2 --number-sections --split-level=1",
     "build": "bun build:pages && bun build:sections",
     "book": "bun run build:html && bun run build:epub",
     "clean": "rmdir /s /q pdfs 2>nul || exit 0",

@@ -1,0 +1,2 @@
+$files = Get-ChildItem html/chapter*.html | Sort-Object Name | ForEach-Object {$_.FullName}
+pandoc $files -o nuejs-docs.epub --epub-metadata=metadata.xml --css=epub-styles.css --toc-depth=2 --number-sections --split-level=1
