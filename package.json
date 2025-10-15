@@ -8,7 +8,10 @@
     "sections": "bun generate-sections-pdfs.js",
     "build:pages": "bun build --compile ./generate-pages-pdfs.js --outfile gen-pages",
     "build:sections": "bun build --compile ./generate-sections-pdfs.js --outfile gen-sections",
+    "build:html": "bun generate-book.js",
+    "build:epub": "pandoc html/nuejs-docs.html -o nuejs-docs.epub --metadata title=\"Learn Nue\" --metadata subtitle=\"The UNIX of the Web\" --metadata author=\"Nue.js Team\"",
     "build": "bun build:pages && bun build:sections",
+    "book": "bun run build:html && bun run build:epub",
     "clean": "rmdir /s /q pdfs 2>nul || exit 0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
