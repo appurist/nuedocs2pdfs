@@ -122,13 +122,8 @@ async function generateBookHTML() {
     const browser = await puppeteer.launch({ headless: 'new' });
     
     try {
-      // Create the combined book HTML
-      let bookHTML = `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Nue.js Documentation</title>
-<style>
+      // Common CSS for all files
+      const commonCSS = `<style>
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; }
 h1 { color: #2563eb; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
 h2 { color: #1f2937; margin-top: 2em; }
@@ -145,47 +140,43 @@ section { break-inside: avoid-page; }
 .toc li { margin: 5px 0; }
 .toc a { text-decoration: none; color: #374151; }
 .toc a:hover { color: #2563eb; }
-</style>
-</head>
-<body>
-`;
+</style>`;
 
-      // Generate Table of Contents
-      bookHTML += `<div class="toc">
-<h1>Table of Contents</h1>
-<ul>
-`;
-      
+      // Generate Table of Contents content
+      let tocContent = '';
       orderedSections.forEach(sectionInfo => {
         const { name: section, pages, number } = sectionInfo;
-        bookHTML += `  <li><a href="#section${number}">${number}. ${section}</a>
+        tocContent += `  <li><a href="#section${number}">${number}. ${section}</a>
     <ul>
 `;
         pages.forEach((pageInfo, pageIndex) => {
           const sectionNumber = `${number}.${pageIndex + 1}`;
-          bookHTML += `      <li><a href="#page${number}-${pageIndex + 1}">${sectionNumber} ${pageInfo.title}</a></li>
+          tocContent += `      <li><a href="#page${number}-${pageIndex + 1}">${sectionNumber} ${pageInfo.title}</a></li>
 `;
         });
-        bookHTML += `    </ul>
+        tocContent += `    </ul>
   </li>
 `;
       });
-      
-      bookHTML += `</ul>
-</div>
-`;
 
       let pageCounter = 0;
       let idCounter = 0;
+      const chapterFiles = [];
       
       for (let i = 0; i < orderedSections.length; i++) {
         const sectionInfo = orderedSections[i];
         const { name: section, pages, number } = sectionInfo;
         console.log(`\nProcessing ${section} section...`);
         
-        // Add section header with page break (except for first section)
-        const sectionClass = i === 0 ? '' : 'section-break';
-        bookHTML += `<div class="${sectionClass}">
+        // Start new chapter HTML
+        let sectionContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${number}. ${section}</title>
+${commonCSS}
+</head>
+<body>
 <h1 id="section${number}">${number}. ${section}</h1>
 `;
         
@@ -288,7 +279,7 @@ section { break-inside: avoid-page; }
               const sectionNumber = `${number}.${pageIndex + 1}`;
               // Add page break before each new page (except the first page of each section)
               const pageBreakClass = pageIndex > 0 ? ' class="section-break"' : '';
-              bookHTML += `<div${pageBreakClass}>
+              sectionContent += `<div${pageBreakClass}>
 <h2 id="page${number}-${pageIndex + 1}">${sectionNumber} ${pageInfo.title}</h2>
 ${pageContent.html}
 </div>
@@ -303,15 +294,35 @@ ${pageContent.html}
           }
         }
         
-        bookHTML += '</div>\n';
+        // Close the section and save individual chapter file
+        sectionContent += '</body></html>';
+        const chapterPath = path.join('html', `chapter-${number.toString().padStart(2, '0')}-${section.toLowerCase().replace(/[^a-z0-9]/g, '-')}.html`);
+        await fs.writeFile(chapterPath, sectionContent, 'utf8');
+        console.log(`  ✓ Saved chapter: ${chapterPath}`);
+        
+        chapterFiles.push(chapterPath);
       }
       
-      bookHTML += '</body></html>';
+      // Create Table of Contents file
+      const tocHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Table of Contents</title>
+${commonCSS}
+</head>
+<body>
+<div class="toc">
+<h1>Table of Contents</h1>
+<ul>
+${tocContent}
+</ul>
+</div>
+</body></html>`;
       
-      // Save the complete book HTML
-      const bookPath = path.join('html', 'nuejs-docs.html');
-      await fs.writeFile(bookPath, bookHTML, 'utf8');
-      console.log(`\n✓ Saved book HTML: ${bookPath}`);
+      const tocPath = path.join('html', '00-toc.html');
+      await fs.writeFile(tocPath, tocHTML, 'utf8');
+      console.log(`\n✓ Saved TOC: ${tocPath}`);
       
     } finally {
       await browser.close();
