@@ -17,6 +17,7 @@
 
     "epub": "pandoc markdown/chapter-*.md -o learning-nue.epub -t epub --metadata-file=metadata.yml --css=epub-styles.css --epub-cover-image=cover.png --toc --toc-depth=2 --split-level=1 --epub-title-page=false",
     "epub-html": "pandoc html/chapter-*.html -o learning-nue-html.epub -t epub --metadata-file=metadata.yml --css=epub-styles.css --epub-cover-image=cover.png --toc --toc-depth=2 --split-level=1 --epub-title-page=false",
+    "html": "pandoc markdown/chapter-*.md -o learning-nue.html --metadata-file=metadata.yml --css=html-styles.css --toc --toc-depth=2 --standalone --embed-resources && bun fix-links.js learning-nue.html",
 
     "book": "bun run fetch && bun run epub",
 
