@@ -6,6 +6,9 @@
   "scripts": {
     "pages": "bun generate-pages-pdfs.js",
     "sections": "bun generate-sections-pdfs.js",
+    "build:pages": "bun build --compile ./generate-pages-pdfs.js --outfile gen-pages",
+    "build:sections": "bun build --compile ./generate-sections-pdfs.js --outfile gen-sections",
+    "build": "bun build:pages && bun build:sections",
     "clean": "rmdir /s /q pdfs 2>nul || exit 0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +18,8 @@
   "type": "commonjs",
   "dependencies": {
     "puppeteer": "^24.24.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
   }
 }
