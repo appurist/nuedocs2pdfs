@@ -29,14 +29,17 @@
   text-align: center;
 }
 
-/* Table of Contents styling */
-.toc {
+/* Table of Contents styling - pandoc auto-generated TOC */
+#TOC {
   page-break-after: always;
-  margin-left: 8em;
-  margin-right: 8em;
+  margin-left: 16em;
+  margin-right: 16em;
+  line-height: 1.4;
+  font-size: 0.95em;
 }
 
-.toc h1 {
+/* Style the generated TOC title if present */
+nav#toc h1, #TOC h1 {
   color: #2563eb;
   border-bottom: 2px solid #e5e7eb;
   padding-bottom: 10px;
@@ -44,31 +47,65 @@
   margin-bottom: 1.5em;
 }
 
-.toc ul {
-  list-style: none;
+/* Convert numbered lists to bullets in EPUB TOC */
+nav#toc ol, #TOC ol {
+  list-style-type: disc !important;
   padding-left: 2em;
-  line-height: 1.8;
+  margin-left: 0;
 }
 
-.toc ul ul {
+nav#toc ol ol, #TOC ol ol { 
+  list-style-type: circle !important;
   padding-left: 2.5em;
   margin-top: 0.5em;
 }
 
-.toc li {
+nav#toc ol ol ol, #TOC ol ol ol { 
+  list-style-type: square !important;
+}
+
+/* Also handle ul elements if pandoc generates them */
+#TOC ul, nav#toc ul {
+  list-style-type: disc !important;
+  padding-left: 2em;
+  line-height: 1.8;
+}
+
+#TOC ul ul, nav#toc ul ul {
+  list-style-type: circle !important;
+  padding-left: 2.5em;
+  margin-top: 0.5em;
+}
+
+/* Force override any ol numbering */
+#TOC > ol, nav#toc > ol {
+  list-style-type: disc !important;
+}
+
+/* Hide the span numbers but keep bullets */
+#TOC .toc-section-number, nav#toc .toc-section-number {
+  display: none;
+}
+
+/* List items */
+#TOC li, nav#toc li {
   margin: 8px 0;
 }
 
-.toc a {
+/* TOC links - make them functional */
+#TOC a, nav#toc a {
   text-decoration: none;
   color: #374151;
   display: block;
   padding: 2px 0;
+  line-height: 1.4;
 }
 
-.toc a:hover {
+#TOC a:hover, nav#toc a:hover {
   color: #2563eb;
+  text-decoration: underline;
 }
+
 
 /* General typography */
 body {
@@ -76,6 +113,8 @@ body {
   line-height: 1.6;
   color: #1f2937;
   font-size: 1em;
+  margin-left: 4em;
+  margin-right: 4em;
 }
 
 /* Headings */
