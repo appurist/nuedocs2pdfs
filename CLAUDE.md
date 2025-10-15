@@ -12,11 +12,18 @@ This is a Node.js script that extracts documentation from https://nuejs.org/docs
 bun install
 ```
 
-### Generate PDFs
+### Generate Individual PDFs (one per page)
 ```bash
-bun start
+bun pages
 # or directly:
-bun generate-docs-pdfs.js
+bun generate-pages-pdfs.js
+```
+
+### Generate Section PDFs (one per section)
+```bash
+bun sections
+# or directly:
+bun generate-sections-pdfs.js
 ```
 
 ### Clean Output
@@ -27,16 +34,15 @@ Removes the `pdfs` output directory.
 
 ## Architecture
 
-### Main Script: `generate-docs-pdfs.js`
-The script uses Puppeteer to:
+### Script: `generate-pages-pdfs.js`
+Generates individual PDFs for each documentation page:
 1. **Fetch documentation structure** (`fetchDocsSections()`): Navigates to nuejs.org/docs and extracts the section hierarchy from the `.topics` div
 2. **Generate PDFs** (`generatePDFs()`): 
    - Creates folder structure under `pdfs/` matching documentation sections
    - For each page, removes unnecessary elements (learn-more div, images, scripts)
    - Generates PDFs with numbered filenames (e.g., `01-Getting-Started.pdf`)
 
-### Output Structure
-PDFs are organized by section in the `pdfs/` directory:
+Output structure:
 ```
 pdfs/
 ├── Section1/
@@ -44,6 +50,23 @@ pdfs/
 │   └── 02-Another-Page.pdf
 └── Section2/
     └── 01-Page.pdf
+```
+
+### Script: `generate-sections-pdfs.js`
+Generates one PDF per documentation section:
+1. **Fetch documentation structure** (`fetchDocsSections()`): Same as above
+2. **Generate PDFs** (`generatePDFs()`):
+   - Creates `pdfs/` directory
+   - For each section, fetches all pages and combines them into a single PDF
+   - Adds CSS page breaks between each documentation page
+   - Generates section PDFs (e.g., `Getting-Started.pdf`)
+
+Output structure:
+```
+pdfs/
+├── Getting-Started.pdf
+├── Concepts.pdf
+└── Reference.pdf
 ```
 
 ### Dependencies

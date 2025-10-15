@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "bun generate-docs-pdfs.js",
+    "pages": "bun generate-pages-pdfs.js",
+    "sections": "bun generate-sections-pdfs.js",
     "clean": "rmdir /s /q pdfs 2>nul || exit 0",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

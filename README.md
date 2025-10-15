@@ -11,21 +11,14 @@ bun install
 
 ## Usage
 
-### Generate PDFs
+### Generate Individual PDFs (one per page)
 ```bash
-bun start
+bun pages
 # or directly:
-bun generate-docs-pdfs.js
+bun generate-pages-pdfs.js
 ```
 
-### Clean Output
-```bash
-bun run clean
-```
-Removes the `pdfs` output directory.
-
-## Output Structure
-The generated PDFs are organized by documentation section:
+Creates a folder structure with individual PDFs:
 ```
 pdfs/
 ├── Section1/
@@ -35,10 +28,34 @@ pdfs/
     └── 01-Page.pdf
 ```
 
+### Generate Section PDFs (one per section)
+```bash
+bun sections
+# or directly:
+bun generate-sections-pdfs.js
+```
+
+Creates one PDF per documentation section with page breaks between topics:
+```
+pdfs/
+├── Getting-Started.pdf
+├── Concepts.pdf
+└── Reference.pdf
+```
+
+### Clean Output
+```bash
+bun run clean
+```
+Removes the `pdfs` output directory.
+
+## Output Details
+
 Each PDF:
-- Has a numbered prefix for easy ordering
 - Contains only the main content (images and navigation elements are removed)
 - Uses Letter format with 20mm margins
+- Individual PDFs have numbered prefixes for easy ordering
+- Section PDFs include page breaks between each documentation page
 
 ## Requirements
 - Bun runtime
