@@ -1,0 +1,18 @@
+{
+  "name": "nuedocs2pdfs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node generate-docs-pdfs",
+    "clean": "rmdir /s /q pdfs 2>nul || exit 0",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "dependencies": {
+    "puppeteer": "^24.24.1"
+  }
+}
