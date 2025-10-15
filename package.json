@@ -1,29 +1,29 @@
 {
   "name": "nuedocs2pdfs",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "pages": "bun generate-pages-pdfs.js",
-    "sections": "bun generate-sections-pdfs.js",
-    "build:pages": "bun build --compile ./generate-pages-pdfs.js --outfile gen-pages",
-    "build:sections": "bun build --compile ./generate-sections-pdfs.js --outfile gen-sections",
-    "build:html": "bun generate-book.js",
-    "build:epub-from-html": "pandoc html/00-toc.html html/chapter-01-essentials.html html/chapter-02-tools.html html/chapter-03-developing.html html/chapter-04-concepts.html html/chapter-05-reference.html -o nuejs-docs.epub --epub-metadata=metadata.xml --css=epub-styles.css --epub-cover-image=cover.png --toc-depth=2 --number-sections --split-level=1",
-    "build:md": "bun generate-book-from-md.js",
-    "build:epub0": "pandoc markdown/chapter-*.md -o nuejs-docs.epub -t epub --metadata-file=metadata.yml --epub-title-page=false --css=epub-styles.css --epub-cover-image=cover.png --toc --toc-depth=2 --split-level=1",
-    "build:epub": "pandoc markdown/chapter-*.md -o nuejs-docs.epub -t epub --metadata-file=metadata.yml --css=epub-styles.css --epub-cover-image=cover.png --toc --toc-depth=2 --split-level=1 --epub-title-page=false",
-    "build": "bun build:pages && bun build:sections",
-    "book": "bun run build:html && bun run build:epub",
-    "clean": "rmdir /s /q pdfs 2>nul || exit 0",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
+  "description": "Produces .epub and other formats from nuejs.org/docs/",
+  "author": "Paul Whittemore <dev@appurist.com>",
   "license": "MIT",
   "type": "commonjs",
+  "scripts": {
+    "clean": "cmd /c \"rmdir /s /q pdfs html markdown 2>nul || exit 0\"",
+
+    "fetch-md": "bun fetch-md.js",
+    "fetch-html": "bun fetch-html.js",
+    "fetch-pdf": "bun fetch-pdf.js",
+
+    "fetch": "bun fetch-md.js",
+    "build": "bun build --compile ./fetch-md.js --outfile fetch-md",
+
+    "epub": "pandoc markdown/chapter-*.md -o learning-nue.epub -t epub --metadata-file=metadata.yml --css=epub-styles.css --epub-cover-image=cover.png --toc --toc-depth=2 --split-level=1 --epub-title-page=false",
+    "epub-html": "pandoc html/chapter-*.html -o learning-nue-html.epub -t epub --metadata-file=metadata.yml --css=epub-styles.css --epub-cover-image=cover.png --toc --toc-depth=2 --split-level=1 --epub-title-page=false",
+
+    "book": "bun run fetch && bun run epub",
+
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
-    "puppeteer": "^24.24.1"
+    "puppeteer": "^24.25.0"
   },
   "devDependencies": {
     "typescript": "^5.9.3"
